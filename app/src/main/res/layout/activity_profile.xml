@@ -47,6 +47,28 @@
                     android:text="Some description about my life story pls hear me out."
                     android:id="@+id/descriptionTextView"
                     android:layout_gravity="center_horizontal" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_horizontal" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Location:"
+                    android:id="@+id/textView2"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Philadelphia, PA"
+                    android:id="@+id/locationTextView"
+                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
         </TableRow>
