@@ -1,7 +1,11 @@
 package foodapp.com.meltingpot;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +18,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.*;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.parse.ParseUser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +63,19 @@ public class Profile extends ListActivity {
         ).executeAsync();
 
         ParseUser user = ParseUser.getCurrentUser();
+
+        name.setText(user.getString("Name"));
+
+        // Location
+        Address address = getLocation(user);
+        String cityName = null;
+        if (address != null) {
+            cityName = address.getLocality();
+        }
+        if (cityName == null) {
+            cityName = "Could not determine location";
+        }
+        location.setText(cityName);
     }
 
     @Override
@@ -81,8 +101,7 @@ public class Profile extends ListActivity {
     }
 
     public void onStartCookingButtonClick(View view) {
-        Intent myIntent = new Intent(this, AddIngredients.class);
-        startActivity(myIntent);
+        startActivity(new Intent(this, AddIngredients.class));
     }
 
     protected void onListItemClick (ListView l, View v, int position, long id) {
@@ -107,5 +126,32 @@ public class Profile extends ListActivity {
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, collaboratorStrs);
         setListAdapter(adapter);
+    }
+
+    private Address getLocation(ParseUser user) {
+        Context context = this.getApplicationContext();
+
+        GoogleApiClient apiClient = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API)
+                .build();
+        Location currLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
+        Double latitude = null;
+        Double longitude = null;
+        if (currLocation != null) {
+            latitude = currLocation.getLatitude();
+            longitude = currLocation.getLongitude();
+        } else {
+            latitude = user.getDouble("Latitude");
+            longitude = user.getDouble("Longitude");
+        }
+
+        Geocoder geocoder = new Geocoder(context);
+        try {
+            return geocoder.getFromLocation(latitude, longitude, 1).get(0);
+        } catch (IOException e) {
+            Log.e("Profile", e.getMessage());
+        }
+
+        return null;
     }
 }
