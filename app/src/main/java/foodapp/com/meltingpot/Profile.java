@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.*;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -39,6 +41,19 @@ public class Profile extends ListActivity {
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
+
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/picture",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        Log.d("Photos response", response.getRawResponse());
+                        response.getJSONArray();
+                    }
+                }
+        ).executeAsync();
 
         ParseUser user = ParseUser.getCurrentUser();
     }
