@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FoodApp</string>
+    <string name="app_name">MeltingPot</string>
     <string name="title_activity_profile">Profile</string>
 
     <string name="hello_world">Hello world!</string>
