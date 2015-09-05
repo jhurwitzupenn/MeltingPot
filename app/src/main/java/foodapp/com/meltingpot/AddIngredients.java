@@ -1,17 +1,20 @@
 package foodapp.com.meltingpot;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddIngredients extends ListActivity {
+    EditText newIngredient;
 
     protected static int selectUpdateRequestCode = 0;
 
@@ -26,50 +29,7 @@ public class AddIngredients extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_ingredients);
 
-        /*// get health updates
-        ParseQuery<ParseObject> foodQuery = ParseQuery.getQuery("FoodUpdate");
-        foodQuery.setLimit(30);
-        foodQuery.orderByAscending("date");
-        ParseQuery<ParseObject> healthQuery = ParseQuery.getQuery("HealthUpdate");
-        healthQuery.setLimit(30);
-        healthQuery.orderByAscending("date");
-        ParseQuery<ParseObject> medicationQuery = ParseQuery.getQuery("MedicationUpdate");
-        medicationQuery.setLimit(30);
-        medicationQuery.orderByAscending("date");
-        if (ParseUser.getCurrentUser().get("Role").equals("Foster Parent")) {
-            ArrayList<Integer> dogIdList = new ArrayList<Integer>();
-            // get dogs
-            try {
-                UserMetaData metaData = (UserMetaData) ParseQuery.getQuery("UserMetaData")
-                        .get(ParseUser.getCurrentUser().getString("MetaData"));
-                List<String> dogObjIds = metaData.getList("DogList");
-
-                for (String id : dogObjIds) {
-                    Dog dog = (Dog) ParseQuery.getQuery("Dog").get(id);
-                    dogIdList.add(dog.getIdNumber());
-                }
-            } catch (Exception e) {
-                Log.d("MyDogsActivity", e.getMessage());
-            }
-
-            foodQuery.whereContainedIn("dogId", dogIdList);
-            healthQuery.whereContainedIn("dogId", dogIdList);
-            medicationQuery.whereContainedIn("dogId", dogIdList);
-        }
-
-        try {
-            for (ParseObject o : foodQuery.find()) {
-                updatesList.add((FoodUpdate) o);
-            }
-            for (ParseObject o : healthQuery.find()) {
-                updatesList.add((HealthUpdate) o);
-            }
-            for (ParseObject o : medicationQuery.find()) {
-                updatesList.add((MedicationUpdate) o);
-            }
-        } catch (Exception e) {
-            Log.d("DashboardActivity", e.getMessage());
-        }*/
+        newIngredient = (EditText) findViewById(R.id.addIngredientEditText);
 
         updateStringArray();
     }
@@ -100,13 +60,23 @@ public class AddIngredients extends ListActivity {
     }
 
     protected void updateStringArray() {
-        ingredientsStrs = new String[ingredientsList.size()];
-
-        for (int i = 0; i < ingredientsList.size(); i++) {
-            ingredientsStrs[i] = ingredientsList.get(i);
-        }
+        ingredientsStrs = (String[]) ingredientsList.toArray();
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientsStrs);
         setListAdapter(adapter);
+    }
+
+    public void onAddIngredientButtonClick(View view) {
+        String ingredient = newIngredient.getText().toString();
+        if (ingredient != null && !ingredientsList.contains(ingredient)) {
+            ingredientsList.add(ingredient);
+            updateStringArray();
+        }
+    }
+
+    public void onFindMatchButtonClick(View view) {
+        // TODO: Direct to Request page
+        /*Intent myIntent = new Intent(this, AddIngredients.class);
+        startActivity(myIntent);*/
     }
 }

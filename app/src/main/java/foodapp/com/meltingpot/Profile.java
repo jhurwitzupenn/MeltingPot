@@ -20,19 +20,13 @@ import java.util.List;
 public class Profile extends ListActivity {
     ImageView profilePic;
     TextView name;
-    TextView description;
     TextView location;
-
-    protected static int selectCollaboratorRequestCode = 0;
-    protected static int addCollaboratorRequestCode = 0;
 
     // Collaborator that the user selects
     ParseUser collaborator;
 
     //List of Collaborators
-    int dogId;
-    String dogName;
-    List<ParseUser> collaboratorList = new ArrayList<ParseUser>();
+    List<ParseUser> collaboratorList = new ArrayList<>();
     String[] collaboratorStrs = new String[0];
 
     ArrayAdapter adapter;
@@ -44,7 +38,6 @@ public class Profile extends ListActivity {
 
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
-        description = (TextView) findViewById(R.id.descriptionTextView);
         location = (TextView) findViewById(R.id.locationTextView);
 
         ParseUser user = ParseUser.getCurrentUser();
@@ -72,7 +65,10 @@ public class Profile extends ListActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    public void onStartCookingButtonClick(View view) {
+        Intent myIntent = new Intent(this, AddIngredients.class);
+        startActivity(myIntent);
+    }
 
     protected void onListItemClick (ListView l, View v, int position, long id) {
         collaborator = collaboratorList.get(position);
