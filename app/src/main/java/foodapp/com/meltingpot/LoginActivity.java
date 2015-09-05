@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -26,8 +29,20 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         loginBtn = (Button) this.findViewById(R.id.email_sign_in_button);
         if(AccessToken.getCurrentAccessToken() != null) {
-            Intent i = new Intent(getApplicationContext(), Profile.class);
-            startActivity(i);
+            new GraphRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    "/me/picture",
+                    null,
+                    HttpMethod.GET,
+                    new GraphRequest.Callback() {
+                        public void onCompleted(GraphResponse response) {
+                            Log.d("Photos response", response.getRawResponse());
+                            response.getJSONArray();
+                            Intent i = new Intent(getApplicationContext(), Profile.class);
+                            startActivity(i);
+                        }
+                    }
+            ).executeAsync();
         }
     }
 
