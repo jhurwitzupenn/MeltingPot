@@ -21,6 +21,7 @@ public class Profile extends ListActivity {
     ImageView profilePic;
     TextView name;
     TextView description;
+    TextView location;
 
     protected static int selectCollaboratorRequestCode = 0;
     protected static int addCollaboratorRequestCode = 0;
@@ -44,6 +45,7 @@ public class Profile extends ListActivity {
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
         description = (TextView) findViewById(R.id.descriptionTextView);
+        location = (TextView) findViewById(R.id.locationTextView);
 
         ParseUser user = ParseUser.getCurrentUser();
     }
