@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.facebook.*;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.parse.ParseUser;
@@ -47,6 +48,19 @@ public class Profile extends ListActivity {
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
+
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/me/picture",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        Log.d("Photos response", response.getRawResponse());
+                        response.getJSONArray();
+                    }
+                }
+        ).executeAsync();
 
         ParseUser user = ParseUser.getCurrentUser();
 
