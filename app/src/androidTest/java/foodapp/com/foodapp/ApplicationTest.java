@@ -1,4 +1,4 @@
-package jordan.com.foodapp;
+package foodapp.com.foodapp;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
