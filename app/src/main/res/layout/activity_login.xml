@@ -12,17 +12,8 @@
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:visibility="gone" />
 
-    TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
-
     <Button android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:
         android:layout_marginTop="275dp" android:text="@string/action_sign_in"
         android:textStyle="bold" />
 
