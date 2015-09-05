@@ -4,17 +4,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.ImageView;
+
+import com.parse.ParseUser;
 
 public class Profile extends AppCompatActivity {
-    TextView name;
+    ImageView profilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        this.name = (TextView) findViewById(R.id.nameTextView);
+        ParseUser user = ParseUser.getCurrentUser();
     }
 
     @Override
