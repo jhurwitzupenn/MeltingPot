@@ -1,11 +1,9 @@
-package foodapp.com.foodapp;
+package foodapp.com.meltingpot;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import foodapp.com.foodapp.R;
 
 public class Profile extends AppCompatActivity {
 

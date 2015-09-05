@@ -1,4 +1,4 @@
-package foodapp.com.foodapp;
+package foodapp.com.meltingpot;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
