@@ -22,6 +22,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.parse.ParseException;
@@ -73,7 +74,6 @@ public class Profile extends ListActivity {
                     try {
                         JSONObject j = response.getJSONObject().getJSONObject("data");
                         final String img_url = j.getString("url");
-                        Log.d("drawing image", img_url);
                         ImageView prof_view = (ImageView) findViewById(R.id.profileImageView);
                         new Thread(new Runnable() {
                             @Override
@@ -146,20 +146,9 @@ public class Profile extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_logout:
-                ParseFacebookUtils.unlinkInBackground(ParseUser.getCurrentUser(), new SaveCallback() {
-                    @Override
-                    public void done(ParseException ex) {
-                        if (ex == null) {
-                            Log.d("MyApp", "The user is no longer associated with their Facebook account.");
-                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivity(i);
-                        } else {
-                            Toast t = Toast.makeText(getApplicationContext(),
-                                    "Couldn't log out: " + ex.toString(), Toast.LENGTH_LONG);
-                            t.show();
-                        }
-                    }
-                });
+                LoginManager.getInstance().logOut();
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(i);
             default:
                 return super.onOptionsItemSelected(item);
         }
