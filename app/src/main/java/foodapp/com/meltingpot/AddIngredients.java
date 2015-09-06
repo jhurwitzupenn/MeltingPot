@@ -3,6 +3,7 @@ package foodapp.com.meltingpot;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.parse.ParseUser;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +89,7 @@ public class AddIngredients extends ListActivity {
     public void onFindMatchButtonClick(View view) {
         ParseUser user = ParseUser.getCurrentUser();
         user.put("Time", mealTime.getText().toString());
-        user.put("Ingredients", ingredientsStrs);
+        user.put("Ingredients", toJSONArray(ingredientsStrs));
         user.put("RequestPending", true);
         user.saveInBackground();
 
@@ -94,5 +97,14 @@ public class AddIngredients extends ListActivity {
         myIntent.putExtra("Ingredients", ingredientsStrs);
         myIntent.putExtra("Time", mealTime.getText().toString());
         startActivity(myIntent);
+    }
+
+    public JSONArray toJSONArray(String[] arr) {
+        try {
+            return new JSONArray(ingredientsStrs);
+        } catch (Exception e) {
+            Log.e("AddIngredients", e.getMessage());
+        }
+        return new JSONArray();
     }
 }

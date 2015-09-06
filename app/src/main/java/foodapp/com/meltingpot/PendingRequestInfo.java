@@ -3,6 +3,7 @@ package foodapp.com.meltingpot;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.ParseUser;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +41,7 @@ public class PendingRequestInfo extends ListActivity {
         // Ingredients
         String[] ingredientsStrs = getIntent().getStringArrayExtra("Ingredients");
         if (ingredientsStrs == null) {
-            ingredientsStrs = (String[]) user.get("Ingredients");
+            ingredientsStrs = fromJSONArray(user.getJSONArray("Ingredients"));
         }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientsStrs);
         setListAdapter(adapter);
@@ -76,5 +79,18 @@ public class PendingRequestInfo extends ListActivity {
         user.saveInBackground();
 
         startActivity(new Intent(this, Profile.class));
+    }
+
+    public String[] fromJSONArray(JSONArray jsonArr) {
+        try {
+            String[] arr = new String[jsonArr.length()];
+            for (int i = 0; i < jsonArr.length(); i++) {
+                arr[i] = jsonArr.getString(i);
+            }
+            return arr;
+        } catch (Exception e) {
+            Log.e("PendingRequestInfo", e.getMessage());
+        }
+        return new String[0];
     }
 }
