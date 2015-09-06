@@ -52,8 +52,12 @@
         android:ems="10"
         android:id="@+id/mealTimeEditText"
         android:layout_above="@+id/findMatchButton"
-        android:layout_centerHorizontal="true"
-        android:text="Meal time?" />
+        android:text="7:00 pm"
+        android:gravity="center"
+        android:layout_alignRight="@+id/textView9"
+        android:layout_alignEnd="@+id/textView9"
+        android:layout_alignLeft="@+id/textView9"
+        android:layout_alignStart="@+id/textView9" />
 
     <ListView
         android:layout_width="wrap_content"
@@ -61,6 +65,22 @@
         android:id="@android:id/list"
         android:layout_below="@+id/addIngredientEditText"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/mealTimeEditText" />
+        android:layout_above="@+id/space4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Meal Time:"
+        android:id="@+id/textView9"
+        android:layout_above="@+id/mealTimeEditText"
+        android:layout_centerHorizontal="true" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_above="@+id/textView9"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/space4" />
 
 </RelativeLayout>

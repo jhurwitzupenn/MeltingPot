@@ -15,6 +15,7 @@ import java.util.List;
 
 public class AddIngredients extends ListActivity {
     EditText newIngredient;
+    EditText mealTime;
 
     protected static int selectUpdateRequestCode = 0;
 
@@ -30,6 +31,7 @@ public class AddIngredients extends ListActivity {
         setContentView(R.layout.activity_add_ingredients);
 
         newIngredient = (EditText) findViewById(R.id.addIngredientEditText);
+        mealTime = (EditText) findViewById(R.id.mealTimeEditText);
 
         updateStringArray();
     }
@@ -80,8 +82,9 @@ public class AddIngredients extends ListActivity {
     }
 
     public void onFindMatchButtonClick(View view) {
-        // TODO: Direct to Request page
-        /*Intent myIntent = new Intent(this, AddIngredients.class);
-        startActivity(myIntent);*/
+        Intent myIntent = new Intent(this, PendingRequestInfo.class);
+        myIntent.putExtra("Ingredients", ingredientsStrs);
+        myIntent.putExtra("Time", mealTime.getText().toString());
+        startActivity(myIntent);
     }
 }

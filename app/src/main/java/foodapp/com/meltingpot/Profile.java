@@ -132,9 +132,7 @@ public class Profile extends ListActivity {
     }
 
     private Address getLocation(ParseUser user) {
-        Context context = this.getApplicationContext();
-
-        GoogleApiClient apiClient = new GoogleApiClient.Builder(context)
+        GoogleApiClient apiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .build();
         Location currLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
@@ -149,14 +147,21 @@ public class Profile extends ListActivity {
         }
 
         if (latitude != null && longitude != null) {
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             try {
-                return geocoder.getFromLocation(latitude, longitude, 10).get(0);
+                List<Address> address = geocoder.getFromLocation(latitude, longitude, 1);
+                if (!address.isEmpty()) {
+                    return address.get(0);
+                }
             } catch (IOException e) {
                 Log.e("Profile", e.getMessage());
             }
         }
 
         return null;
+    }
+
+    public void onEditLocationButtonClick(View view) {
+
     }
 }
