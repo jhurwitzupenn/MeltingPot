@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +84,12 @@ public class AddIngredients extends ListActivity {
     }
 
     public void onFindMatchButtonClick(View view) {
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put("Time", mealTime.getText().toString());
+        user.put("Ingredients", ingredientsStrs);
+        user.put("RequestPending", true);
+        user.saveInBackground();
+
         Intent myIntent = new Intent(this, PendingRequestInfo.class);
         myIntent.putExtra("Ingredients", ingredientsStrs);
         myIntent.putExtra("Time", mealTime.getText().toString());

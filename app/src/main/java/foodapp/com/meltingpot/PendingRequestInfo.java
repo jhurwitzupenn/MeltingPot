@@ -10,27 +10,36 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PendingRequestInfo extends ListActivity {
 
-    //List of Ingredients
-    String[] ingredientsStrs = new String[0];
-
-    TextView mealTime;
-
     ArrayAdapter adapter;
+    ParseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending_request_info);
 
-        mealTime = (TextView) findViewById(R.id.mealTimeTextView);
-        mealTime.setText(getIntent().getStringExtra("Time"));
+        user = ParseUser.getCurrentUser();
 
-        ingredientsStrs = getIntent().getStringArrayExtra("Ingredients");
+        // Time
+        String timeStr = getIntent().getStringExtra("Time");
+        if (timeStr == null) {
+            timeStr = user.getString("Time");
+        }
+        TextView mealTime = (TextView) findViewById(R.id.mealTimeTextView);
+        mealTime.setText(timeStr);
+
+        // Ingredients
+        String[] ingredientsStrs = getIntent().getStringArrayExtra("Ingredients");
+        if (ingredientsStrs == null) {
+            ingredientsStrs = (String[]) user.get("Ingredients");
+        }
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientsStrs);
         setListAdapter(adapter);
     }
@@ -61,6 +70,11 @@ public class PendingRequestInfo extends ListActivity {
     }
 
     public void onCancelRequestButtonClick(View view) {
+        user.remove("Time");
+        user.remove("Ingredients");
+        user.put("RequestPending", false);
+        user.saveInBackground();
+
         startActivity(new Intent(this, Profile.class));
     }
 }
