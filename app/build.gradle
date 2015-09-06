@@ -33,4 +33,5 @@ dependencies {
     compile files('libs/ParseTwitterUtils-1.10.1.jar')
     compile files('libs/PPNS-1.10.1.jar')
     compile 'com.mcxiaoke.volley:library:1.0.18'
+    compile 'io.reactivex:rxandroid:1.0.1'
 }

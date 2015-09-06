@@ -1,6 +1,8 @@
 package foodapp.com.meltingpot;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -45,7 +47,8 @@ public class YummlyApiHandler {
     private final static String AMPERSAND = "&";
     private static boolean has_requested;
 
-    public static void makeYummlyRequest(List<String> ingredients, final Activity activity) {
+    public static void makeYummlyRequest(List<String> ingredients, final Context context, final YummlyCallback y
+            ) {
         String url = null;
         url = configureUrl(ingredients);
 
@@ -56,6 +59,7 @@ public class YummlyApiHandler {
                     public void onResponse(JSONObject response) {
                         json = response;
                         has_requested = true;
+                        y.result(response);
                         Log.d("MELTING", json.toString());
                     }
                 }, new Response.ErrorListener() {
@@ -65,7 +69,7 @@ public class YummlyApiHandler {
                         Log.d("MELTING", "Yummly Error response" + error.getLocalizedMessage());
                     }
                 });
-        Volley.newRequestQueue(activity).add(jsObjRequest);
+        Volley.newRequestQueue(context).add(jsObjRequest);
         // timeout after 10 seconds, blocks other threads
         /**
         String url = configureUrl(ingredients);
