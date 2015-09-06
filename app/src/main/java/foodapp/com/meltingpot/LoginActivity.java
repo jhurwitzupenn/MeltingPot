@@ -36,8 +36,13 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         loginBtn = (Button) this.findViewById(R.id.email_sign_in_button);
         if(AccessToken.getCurrentAccessToken() != null) {
-            Intent i = new Intent(getApplicationContext(), Profile.class);
-            startActivity(i);
+            ParseUser user = ParseUser.getCurrentUser();
+
+            if (user.getBoolean("PendingRequest") == false) {
+                startActivity(new Intent(this, Profile.class));
+            } else {
+                startActivity(new Intent(this, PendingRequestInfo.class));
+            }
         }
     }
 

@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".MeltingPot"
@@ -46,6 +46,10 @@
         <activity
             android:name=".PendingRequestInfo"
             android:label="@string/title_activity_pending_request_info" >
+        </activity>
+        <activity
+            android:name=".Match"
+            android:label="@string/title_activity_match" >
         </activity>
     </application>
 
