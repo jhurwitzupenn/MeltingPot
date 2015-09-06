@@ -168,14 +168,18 @@ public class Profile extends ListActivity {
     }
 
     protected void updateStringArray(JSONArray collaborators) {
-        collaboratorStrs = new String[collaborators.length()];
+        if (collaborators != null) {
+            collaboratorStrs = new String[collaborators.length()];
 
-        try {
-            for (int i = 0; i < collaborators.length(); i++) {
-                collaboratorStrs[i] = collaborators.getString(i);
+            try {
+                for (int i = 0; i < collaborators.length(); i++) {
+                    collaboratorStrs[i] = collaborators.getString(i);
+                }
+            } catch (Exception e) {
+                Log.e("Profile", e.getMessage());
             }
-        } catch (Exception e) {
-            Log.e("Profile", e.getMessage());
+        } else {
+            collaboratorStrs = new String[0];
         }
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, collaboratorStrs);
