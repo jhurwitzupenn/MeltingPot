@@ -7,21 +7,27 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.*;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +59,7 @@ public class Profile extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        getActionBar().show();
         Bundle params = new Bundle();
         params.putString("redirect", "false");
         profilePic = (ImageView) findViewById(R.id.profileImageView);
@@ -116,24 +123,33 @@ public class Profile extends ListActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_profile, menu);
-        return true;
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_profile, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()) {
+            case R.id.action_logout:
+                ParseFacebookUtils.unlinkInBackground(ParseUser.getCurrentUser(), new SaveCallback() {
+                    @Override
+                    public void done(ParseException ex) {
+                        if (ex == null) {
+                            Log.d("MyApp", "The user is no longer associated with their Facebook account.");
+                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(i);
+                        } else {
+                            Toast t = Toast.makeText(getApplicationContext(),
+                                    "Couldn't log out: " + ex.toString(), Toast.LENGTH_LONG);
+                            t.show();
+                        }
+                    }
+                });
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void onStartCookingButtonClick(View view) {
