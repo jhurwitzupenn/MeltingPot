@@ -2,10 +2,7 @@ package foodapp.com.meltingpot;
 
 import android.app.Application;
 import com.parse.Parse;
-import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 /**
  * Created by martingreenberg on 9/5/15.
