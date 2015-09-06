@@ -24,6 +24,7 @@ import com.google.android.gms.location.LocationServices;
 import com.parse.ParseUser;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,24 +53,43 @@ public class Profile extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        Bundle params = new Bundle();
+        params.putString("redirect", "false");
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
         /*new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
-                "/me/picture&redirect=true",
-                null,
+                "/me/picture",
+                params,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
                         try {
-                            String img_url = response.getJSONObject().getJSONObject("data").getString("url");
-                            InputStream is = (InputStream) new URL(img_url).getContent();
-                            Drawable d = Drawable.createFromStream(is, "profile_picture");
-                            ((ImageView) findViewById(R.id.profileImageView)).setImageDrawable(d);
+                            JSONObject j = response.getJSONObject().getJSONObject("data");
+                            final String img_url = j.getString("url");
+                            Log.d("drawing image", img_url);
+                            ImageView prof_view = (ImageView) findViewById(R.id.profileImageView);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    InputStream is = null;
+                                    try {
+                                        is = (InputStream) new URL(img_url).getContent();
+                                        final Drawable d = Drawable.createFromStream(is, "profile_picture");
+                                        ((ImageView) findViewById(R.id.profileImageView)).post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                ((ImageView) findViewById(R.id.profileImageView)).setImageDrawable(d);
+                                            }
+                                        });
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).start();
                         } catch (Exception e) {
-                            Log.d("Getting profile picture", e.getMessage());
+                            Log.d("Getting profile picture", e.toString());
                             return;
                         }
                     }
