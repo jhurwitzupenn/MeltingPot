@@ -56,7 +56,7 @@ public class Profile extends ListActivity {
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
-        new GraphRequest(
+        /*new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/picture&redirect=true",
                 null,
@@ -74,7 +74,7 @@ public class Profile extends ListActivity {
                         }
                     }
                 }
-        ).executeAsync();
+        ).executeAsync();*/
 
         ParseUser user = ParseUser.getCurrentUser();
 
@@ -89,7 +89,7 @@ public class Profile extends ListActivity {
             cityName = address.getLocality();
         }
         if (cityName == null) {
-            cityName = "Could not determine location";
+            cityName = "Philadelphia, PA";
         }
         location.setText(cityName);
     }
@@ -145,9 +145,7 @@ public class Profile extends ListActivity {
     }
 
     private Address getLocation(ParseUser user) {
-        Context context = this.getApplicationContext();
-
-        GoogleApiClient apiClient = new GoogleApiClient.Builder(context)
+        GoogleApiClient apiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .build();
         Location currLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
@@ -162,14 +160,21 @@ public class Profile extends ListActivity {
         }
 
         if (latitude != null && longitude != null) {
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             try {
-                return geocoder.getFromLocation(latitude, longitude, 10).get(0);
+                List<Address> address = geocoder.getFromLocation(latitude, longitude, 1);
+                if (!address.isEmpty()) {
+                    return address.get(0);
+                }
             } catch (Exception e) {
                 Log.e("Profile", e.getMessage());
             }
         }
 
         return null;
+    }
+
+    public void onEditLocationButtonClick(View view) {
+
     }
 }

@@ -17,7 +17,7 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="50">
+            android:layout_weight="30">
 
             <ImageView
                 android:layout_width="0dp"
@@ -40,6 +40,11 @@
                     android:id="@+id/nameTextView"
                     android:layout_gravity="center_horizontal" />
 
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_horizontal" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -53,9 +58,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Philadelphia, PA"
+                    android:text="Could not determine location"
                     android:id="@+id/locationTextView"
                     android:layout_gravity="center_horizontal" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_horizontal" />
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Location"
+                    android:id="@+id/button"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="onEditLocationButtonClick"/>
 
             </LinearLayout>
 
@@ -90,8 +109,9 @@
             </LinearLayout>
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="25"
                 android:text="Let's Get Cooking!"
                 android:id="@+id/startCookingButton"
                 android:onClick="onStartCookingButtonClick" />
