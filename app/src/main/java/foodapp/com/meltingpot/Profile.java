@@ -138,12 +138,9 @@ public class Profile extends ListActivity {
         user = ParseUser.getCurrentUser();
         user.put("FBUserId", AccessToken.getCurrentAccessToken().getUserId());
         user.saveInBackground();
-
-        if (user != null) {
-            name.setText(user.getString("name"));
-            if (user.getString("PhoneNumber") != null) {
-                phoneNumber.setText(user.getString("PhoneNumber"));
-            }
+        name.setText(user.getString("name"));
+        if (user.getString("PhoneNumber") != null) {
+            phoneNumber.setText(user.getString("PhoneNumber"));
         }
 
         // Location
