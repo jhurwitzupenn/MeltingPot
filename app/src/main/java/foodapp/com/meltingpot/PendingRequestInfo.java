@@ -1,6 +1,7 @@
 package foodapp.com.meltingpot;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,5 +58,9 @@ public class PendingRequestInfo extends ListActivity {
     }
 
     protected void onListItemClick (ListView l, View v, int position, long id) {
+    }
+
+    public void onCancelRequestButtonClick(View view) {
+        startActivity(new Intent(this, Profile.class));
     }
 }

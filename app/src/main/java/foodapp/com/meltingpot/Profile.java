@@ -56,7 +56,7 @@ public class Profile extends ListActivity {
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
-        new GraphRequest(
+        /*new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/picture&redirect=true",
                 null,
@@ -74,7 +74,7 @@ public class Profile extends ListActivity {
                         }
                     }
                 }
-        ).executeAsync();
+        ).executeAsync();*/
 
         ParseUser user = ParseUser.getCurrentUser();
 
@@ -89,7 +89,7 @@ public class Profile extends ListActivity {
             cityName = address.getLocality();
         }
         if (cityName == null) {
-            cityName = "Could not determine location";
+            cityName = "Philadelphia, PA";
         }
         location.setText(cityName);
     }
