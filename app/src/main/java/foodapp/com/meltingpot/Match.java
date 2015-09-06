@@ -143,7 +143,7 @@ public class Match extends Activity {
     }
 
     public void onDeclineMatchButtonClick(View view) {
-        finish();
+        startActivity(new Intent(this, PendingRequestInfo.class));
     }
 
     public void onAcceptMatchButtonClick(View view) {
