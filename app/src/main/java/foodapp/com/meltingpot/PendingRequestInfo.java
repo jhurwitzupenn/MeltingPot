@@ -88,42 +88,51 @@ public class PendingRequestInfo extends ListActivity {
                                     public void result(JSONObject j) {
                                         JSONArray results = YummlyApiHandler.results(j);
                                         Log.d("results from thing", YummlyApiHandler.getRecipeNames(results).toString());
-                                        String name = YummlyApiHandler.getRecipeNames(results).get(0);
-                                        List<String> ingredients = YummlyApiHandler.getIngredients(results).get(0);
-                                        List<String> missingIngredients = new ArrayList<String>(ingredients);
+                                        final String name = YummlyApiHandler.getRecipeNames(results).get(0);
+                                        final List<String> ingredients = YummlyApiHandler.getIngredients(results).get(0);
+                                        final List<String> missingIngredients = new ArrayList<String>(ingredients);
                                         missingIngredients.removeAll(ourIngreds);
-                                        String url = YummlyApiHandler.getRecipeUrls(results).get(0);
-                                        RecipeObject recipe = new RecipeObject(name, ingredients, missingIngredients, url);
-                                        try {
-                                            recipe.save();
-                                        } catch (Exception e) {
-                                            Log.e("PendingRequestInfo", e.getMessage());
-                                        }
-
-                                        // yay match
-                                        user.put("RequestPending", false);
-                                        user.put("HasMatch", true);
-                                        user.put("AcceptMatch", false);
-                                        user.put("RecipeId", recipe.getObjectId());
-                                        user.put("MatchId", p.getObjectId());
-
-                                        user.saveInBackground();
-                                        HashMap<String, Object> params = new HashMap<String, Object>();
-                                        params.put("userId", user.getObjectId());
-                                        params.put("recipeId", recipe.getObjectId());
-                                        ParseCloud.callFunctionInBackground("modifyUser", params,
-                                                new FunctionCallback<String>() {
+                                        String recipe_id = YummlyApiHandler.getFirstRecipeId(results);
+                                        YummlyApiHandler.makeYummlyRecipeRequest(recipe_id, getApplicationContext(),
+                                                new YummlyCallback() {
                                                     @Override
-                                                    public void done(String object, ParseException e) {
-                                                        if (e == null) {
-                                                            Log.d("modify user callback", object);
-                                                            startActivity(new Intent(getApplicationContext(), Match.class));
-                                                        } else {
-                                                            Log.d("modifyuser error", e.toString());
+                                                    public void result(JSONObject k) {
+                                                        String url = YummlyApiHandler.getRecipeUrls(k);
+                                                        Log.d("MELTING", "This works!");
+                                                        RecipeObject recipe = new RecipeObject(name, ingredients, missingIngredients, url);
+                                                        try {
+                                                            recipe.save();
+                                                        } catch (Exception e) {
+                                                            Log.e("PendingRequestInfo", e.getMessage());
                                                         }
+
+                                                        // yay match
+                                                        user.put("RequestPending", false);
+                                                        user.put("HasMatch", true);
+                                                        user.put("AcceptMatch", false);
+                                                        user.put("RecipeId", recipe.getObjectId());
+                                                        user.put("MatchId", p.getObjectId());
+
+                                                        user.saveInBackground();
+                                                        HashMap<String, Object> params = new HashMap<String, Object>();
+                                                        params.put("userId", user.getObjectId());
+                                                        params.put("recipeId", recipe.getObjectId());
+                                                        ParseCloud.callFunctionInBackground("modifyUser", params,
+                                                                new FunctionCallback<String>() {
+                                                                    @Override
+                                                                    public void done(String object, ParseException e) {
+                                                                        if (e == null) {
+                                                                            Log.d("modify user callback", object);
+                                                                            startActivity(new Intent(getApplicationContext(), Match.class));
+                                                                        } else {
+                                                                            Log.d("modifyuser error", e.toString());
+                                                                        }
+                                                                    }
+                                                                }
+                                                        );
                                                     }
-                                                }
-                                        );
+                                                });
+
                                     }
                                 }
                         );
