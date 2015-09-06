@@ -108,6 +108,7 @@ public class Profile extends ListActivity {
                         ParseUser currUser = ParseUser.getCurrentUser();
                         currUser.put("name",j.get("name"));
                         currUser.saveInBackground();
+                        name.setText(j.getString("name"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -118,7 +119,7 @@ public class Profile extends ListActivity {
         ParseUser user = ParseUser.getCurrentUser();
 
         if (user != null) {
-            name.setText(user.getString("Name"));
+            name.setText(user.getString("name"));
         }
 
         // Location
