@@ -53,12 +53,13 @@ public class PendingRequestInfo extends ListActivity {
         }
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereEqualTo("RequestPending", true);
+        query.whereNotEqualTo("objectId",user.getObjectId());
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 if (e == null) {
                     for (ParseUser p : objects) {
-                        if (p.getString("MatchId").equals(user.getObjectId())) {
+                        if (user.getObjectId().equals(p.getString("MatchId"))) {
                             user.put("RequestPending", false);
                             user.put("HasMatch", true);
                             user.put("AcceptMatch", false);
