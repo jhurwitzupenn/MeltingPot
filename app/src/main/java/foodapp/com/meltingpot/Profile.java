@@ -30,6 +30,7 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,7 +50,6 @@ public class Profile extends ListActivity {
     ParseUser collaborator;
 
     //List of Collaborators
-    List<ParseUser> collaboratorList = new ArrayList<>();
     String[] collaboratorStrs = new String[0];
 
     ArrayAdapter adapter;
@@ -117,6 +117,7 @@ public class Profile extends ListActivity {
         ).executeAsync();
 
         ParseUser user = ParseUser.getCurrentUser();
+        // TODO: I don't think I did this right
         user.put("FBUserId", AccessToken.getCurrentAccessToken().getUserId());
 
         if (user != null) {
@@ -133,6 +134,8 @@ public class Profile extends ListActivity {
             cityName = "Philadelphia, PA";
         }
         location.setText(cityName);
+
+        updateStringArray(user.getJSONArray("Collaborators"));
     }
 
     @Override
@@ -159,24 +162,19 @@ public class Profile extends ListActivity {
         startActivity(new Intent(this, AddIngredients.class));
     }
 
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        collaborator = collaboratorList.get(position);
-        selectCollaborator();
-    }
-
-    public void selectCollaborator() {
-        // TODO: maybe show collaborator profile
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     }
 
-    protected void updateStringArray() {
-        collaboratorStrs = new String[collaboratorList.size()];
+    protected void updateStringArray(JSONArray collaborators) {
+        collaboratorStrs = new String[collaborators.length()];
 
-        for (int i = 0; i < collaboratorList.size(); i++) {
-            collaboratorStrs[i] = collaboratorList.get(i).getString("Name");
+        try {
+            for (int i = 0; i < collaborators.length(); i++) {
+                collaboratorStrs[i] = collaborators.getString(i);
+            }
+        } catch (Exception e) {
+            Log.e("Profile", e.getMessage());
         }
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, collaboratorStrs);

@@ -25,11 +25,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class Match extends Activity {
+public class MatchStatus extends Activity {
     ImageView matchProfilePic;
     TextView matchName;
     TextView matchTime;
     TextView recipeName;
+    TextView matchStatus;
 
     String[] matchIngredients;
     String[] missingIngredients;
@@ -38,20 +39,27 @@ public class Match extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_match);
+        setContentView(R.layout.activity_match_status);
 
         matchName = (TextView) findViewById(R.id.matchNameTextView);
         matchTime = (TextView) findViewById(R.id.matchTimeTextView);
+        matchStatus = (TextView) findViewById(R.id.matchStatusTextView);
         recipeName = (TextView) findViewById(R.id.recipeNameTextView);
 
         ParseUser user = ParseUser.getCurrentUser();
         try {
             user.fetch();
+
+            // Match user
             ParseUser matchUser = ParseUser.getQuery().get(user.getString("MatchId"));
             if (matchUser != null) {
                 matchName.setText(matchUser.getString("name"));
                 matchTime.setText(matchUser.getString("Time"));
                 matchIngredients = fromJSONArray(matchUser.getJSONArray("Ingredients"));
+
+                matchStatus.setText(matchUser.getBoolean("AcceptMatch")
+                    ? "Accepted"
+                    : "Pending");
 
                 Bundle params = new Bundle();
                 params.putString("redirect", "false");
@@ -94,11 +102,14 @@ public class Match extends Activity {
                         }
                 ).executeAsync();
             }
+
+            // Recipe
             recipeObject = ParseQuery.getQuery(RecipeObject.class).get(user.getString("RecipeId"));
             if (recipeObject != null) {
                 recipeName.setText(recipeObject.getString("Name"));
                 missingIngredients = fromJSONArray(recipeObject.getJSONArray("MissingIngredients"));
             }
+
         } catch (Exception e) {
             Log.e("Match", e.getMessage());
         }
@@ -107,7 +118,7 @@ public class Match extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_match, menu);
+        getMenuInflater().inflate(R.menu.menu_match_status, menu);
         return true;
     }
 
@@ -140,14 +151,6 @@ public class Match extends Activity {
         Intent myIntent = new Intent(this, ViewIngredients.class);
         myIntent.putExtra("Ingredients", missingIngredients);
         startActivity(myIntent);
-    }
-
-    public void onDeclineMatchButtonClick(View view) {
-        finish();
-    }
-
-    public void onAcceptMatchButtonClick(View view) {
-        startActivity(new Intent(this, MatchStatus.class));
     }
 
     public String[] fromJSONArray(JSONArray jsonArr) {

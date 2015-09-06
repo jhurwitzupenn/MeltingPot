@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:weightSum="100"
-    tools:context="foodapp.com.meltingpot.Match">
+    tools:context="foodapp.com.meltingpot.MatchStatus">
 
     <TableLayout
         android:layout_width="match_parent"
@@ -147,24 +147,23 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center">
 
-            <Button
-                android:layout_width="0dp"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="Decline"
-                android:id="@+id/declineMatchButton"
-                android:onClick="onDeclineMatchButtonClick"/>
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Match Status:  "
+                android:id="@+id/textView10"
+                android:textStyle="bold" />
 
-            <Button
-                android:layout_width="0dp"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="Accept"
-                android:id="@+id/acceptMatchButton"
-                android:textStyle="bold"
-                android:onClick="onAcceptMatchButtonClick"/>
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Pending"
+                android:id="@+id/matchStatusTextView" />
         </TableRow>
     </TableLayout>
 </RelativeLayout>
