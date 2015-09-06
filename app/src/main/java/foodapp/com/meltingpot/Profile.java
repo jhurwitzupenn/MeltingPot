@@ -58,7 +58,7 @@ public class Profile extends ListActivity {
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
-        /*new GraphRequest(
+        new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/picture",
                 params,
@@ -94,7 +94,7 @@ public class Profile extends ListActivity {
                         }
                     }
                 }
-        ).executeAsync();*/
+        ).executeAsync();
 
         ParseUser user = ParseUser.getCurrentUser();
 
