@@ -50,7 +50,7 @@ public class Profile extends ListActivity {
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
 
-        gnew GraphRequest(
+        new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/picture",
                 null,
