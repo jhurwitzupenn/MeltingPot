@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.facebook.AccessToken;
 import com.parse.LogInCallback;
@@ -30,10 +29,12 @@ public class LoginActivity extends Activity {
                 Log.e("LoginActivity", e.getMessage());
             }
 
-            if (user.getBoolean("RequestPending") == false) {
-                startActivity(new Intent(this, Profile.class));
-            } else {
+            if (user.getBoolean("HasMatch") == true) {
+                startActivity(new Intent(this, Match.class));
+            } else if (user.getBoolean("RequestPending") == true) {
                 startActivity(new Intent(this, PendingRequestInfo.class));
+            } else {
+                startActivity(new Intent(this, Profile.class));
             }
         }
     }
@@ -44,10 +45,12 @@ public class LoginActivity extends Activity {
             @Override
             public void done(ParseUser user, ParseException err) {
                 if (err == null && user != null) {
-                    if (user.getBoolean("PendingRequest") == false) {
-                        startActivity(new Intent(getApplicationContext(), Profile.class));
-                    } else {
+                    if (user.getBoolean("HasMatch") == true) {
+                        startActivity(new Intent(getApplicationContext(), Match.class));
+                    } else if (user.getBoolean("RequestPending") == true) {
                         startActivity(new Intent(getApplicationContext(), PendingRequestInfo.class));
+                    } else {
+                        startActivity(new Intent(getApplicationContext(), Profile.class));
                     }
                 }
             }

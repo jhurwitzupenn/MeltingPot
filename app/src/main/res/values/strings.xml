@@ -9,4 +9,5 @@
     <string name="logout">Log Out</string>
     <string name="title_activity_pending_request_info">Pending Request Info</string>
     <string name="title_activity_match">Match</string>
+    <string name="title_activity_view_ingredients">Ingredients</string>
 </resources>

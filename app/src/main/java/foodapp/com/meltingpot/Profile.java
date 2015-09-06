@@ -117,6 +117,7 @@ public class Profile extends ListActivity {
         ).executeAsync();
 
         ParseUser user = ParseUser.getCurrentUser();
+        user.put("FBUserId", AccessToken.getCurrentAccessToken().getUserId());
 
         if (user != null) {
             name.setText(user.getString("name"));

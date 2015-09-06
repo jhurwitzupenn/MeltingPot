@@ -51,6 +51,10 @@
             android:name=".Match"
             android:label="@string/title_activity_match" >
         </activity>
+        <activity
+            android:name=".ViewIngredients"
+            android:label="@string/title_activity_view_ingredients" >
+        </activity>
     </application>
 
 </manifest>

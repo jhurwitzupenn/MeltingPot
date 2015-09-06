@@ -23,7 +23,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="25"
-                android:id="@+id/profileImageView"
+                android:id="@+id/matchProfileImageView"
                 android:src="@mipmap/default_profile_pic" />
 
             <LinearLayout
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Other Cook"
-                    android:id="@+id/nameTextView"
+                    android:id="@+id/matchNameTextView"
                     android:layout_gravity="center_horizontal" />
 
                 <TextView
@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Could not determine location"
+                    android:text="Philadelphia, PA"
                     android:id="@+id/locationTextView"
                     android:layout_gravity="center_horizontal" />
 
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="7:00 pm"
-                    android:id="@+id/textView10"
+                    android:id="@+id/matchTimeTextView"
                     android:layout_gravity="center_horizontal" />
 
                 <Button
@@ -79,8 +79,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ingredients"
-                    android:id="@+id/button3"
-                    android:layout_gravity="center_horizontal" />
+                    android:id="@+id/matchIngredientsButton"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="onMatchIngredientsButtonClick"/>
 
             </LinearLayout>
 
@@ -113,15 +114,16 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Flank Steak"
-                    android:id="@+id/textView12"
+                    android:id="@+id/recipeNameTextView"
                     android:layout_gravity="center_horizontal" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="See Full Recipe"
-                    android:id="@+id/button6"
-                    android:layout_gravity="center_horizontal" />
+                    android:id="@+id/fullRecipeButton"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="onFullRecipeButtonClick"/>
             </LinearLayout>
 
             <ImageView
@@ -143,15 +145,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:text="Decline"
-                android:id="@+id/button4" />
+                android:id="@+id/declineMatchButton"
+                android:onClick="onDeclineMatchButtonClick"/>
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:text="Accept"
-                android:id="@+id/button5"
-                android:textStyle="bold" />
+                android:id="@+id/acceptMatchButton"
+                android:textStyle="bold"
+                android:onClick="onAcceptMatchButtonClick"/>
         </TableRow>
     </TableLayout>
 </RelativeLayout>

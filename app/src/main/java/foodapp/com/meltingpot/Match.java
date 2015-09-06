@@ -1,16 +1,100 @@
 package foodapp.com.meltingpot;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-public class Match extends AppCompatActivity {
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+public class Match extends Activity {
+    ImageView matchProfilePic;
+    TextView matchName;
+    TextView matchTime;
+    TextView recipeName;
+    String[] matchIngredients;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match);
+
+        matchName = (TextView) findViewById(R.id.matchNameTextView);
+        matchTime = (TextView) findViewById(R.id.matchTimeTextView);
+        recipeName = (TextView) findViewById(R.id.recipeNameTextView);
+
+        ParseUser user = ParseUser.getCurrentUser();
+        try {
+            user.fetch();
+            ParseUser matchUser = (ParseUser) ParseUser.getQuery().get(user.getString("MatchId"));
+            if (matchUser != null) {
+                matchName.setText(matchUser.getString("name"));
+                matchTime.setText(matchUser.getString("Time"));
+                matchIngredients = fromJSONArray(matchUser.getJSONArray("Ingredients"));
+
+                Bundle params = new Bundle();
+                params.putString("redirect", "false");
+                matchProfilePic = (ImageView) findViewById(R.id.matchProfileImageView);
+                new GraphRequest(
+                        AccessToken.getCurrentAccessToken(),
+                        "/" + matchUser.getString("FBUserId") + "/picture",
+                        params,
+                        HttpMethod.GET,
+                        new GraphRequest.Callback() {
+                            public void onCompleted(GraphResponse response) {
+                                try {
+                                    JSONObject j = response.getJSONObject().getJSONObject("data");
+                                    final String img_url = j.getString("url");
+                                    Log.d("drawing image", img_url);
+                                    ImageView prof_view = (ImageView) findViewById(R.id.matchProfileImageView);
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            InputStream is = null;
+                                            try {
+                                                is = (InputStream) new URL(img_url).getContent();
+                                                final Drawable d = Drawable.createFromStream(is, "profile_picture");
+                                                ((ImageView) findViewById(R.id.matchProfileImageView)).post(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        ((ImageView) findViewById(R.id.matchProfileImageView)).setImageDrawable(d);
+                                                    }
+                                                });
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }).start();
+                                } catch (Exception e) {
+                                    Log.d("Getting profile picture", e.toString());
+                                    return;
+                                }
+                            }
+                        }
+                ).executeAsync();
+            }
+            // TODO: Recipe Object
+        } catch (Exception e) {
+            Log.e("Match", e.getMessage());
+        }
     }
 
     @Override
@@ -33,5 +117,36 @@ public class Match extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onMatchIngredientsButtonClick(View view) {
+        Intent myIntent = new Intent(this, ViewIngredients.class);
+        myIntent.putExtra("Ingredients", matchIngredients);
+        startActivity(myIntent);
+    }
+
+    public void onFullRecipeButtonClick(View view) {
+        // TODO: Start View Recipe intent
+    }
+
+    public void onDeclineMatchButtonClick(View view) {
+        // TODO: Decline action (bring back to request page)
+    }
+
+    public void onAcceptMatchButtonClick(View view) {
+        // TODO: Yay match maybe send phone number
+    }
+
+    public String[] fromJSONArray(JSONArray jsonArr) {
+        try {
+            String[] arr = new String[jsonArr.length()];
+            for (int i = 0; i < jsonArr.length(); i++) {
+                arr[i] = jsonArr.getString(i);
+            }
+            return arr;
+        } catch (Exception e) {
+            Log.e("PendingRequestInfo", e.getMessage());
+        }
+        return new String[0];
     }
 }
