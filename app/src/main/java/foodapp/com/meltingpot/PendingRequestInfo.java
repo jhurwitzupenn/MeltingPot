@@ -12,7 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.FindCallback;
+import com.parse.FunctionCallback;
 import com.parse.Parse;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -106,8 +108,22 @@ public class PendingRequestInfo extends ListActivity {
                                         user.put("MatchId", p.getObjectId());
 
                                         user.saveInBackground();
-
-                                        startActivity(new Intent(getApplicationContext(), Match.class));
+                                        HashMap<String, Object> params = new HashMap<String, Object>();
+                                        params.put("userId", user.getObjectId());
+                                        params.put("recipeId", recipe.getObjectId());
+                                        ParseCloud.callFunctionInBackground("modifyUser", params,
+                                                new FunctionCallback<String>() {
+                                                    @Override
+                                                    public void done(String object, ParseException e) {
+                                                        if (e == null) {
+                                                            Log.d("modify user callback", object);
+                                                            startActivity(new Intent(getApplicationContext(), Match.class));
+                                                        } else {
+                                                            Log.d("modifyuser error", e.toString());
+                                                        }
+                                                    }
+                                                }
+                                        );
                                     }
                                 }
                         );
