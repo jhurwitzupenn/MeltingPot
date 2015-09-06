@@ -1,28 +1,9 @@
-Voice activated (or could have the option to type in too):
-  input:
-    ingredients
-    time of meal
-    location (maybe part of their profile)
-  output:
-    meals you could make with friends
-    meal times that would work if you are flexible.
-      maybe should be like time frame you’re available, so it takes the cooking duration into account
-    chat between people.
+Melting Pot
 
-Notes:
-Each person has profile
-Can rate the people they’ve cooked with?
-  Need confirmation from both parties that the cooking happened
-Can rate the recipes?
-Maybe you can take a picture of the finished product and associate it with the recipe and with your profiles
-Maybe can match up multiple people (up to groups of 4 or so?)
+An app to bring us together through the mutual love of cooking and food.
 
-Tools:
-IBM Watson
-Yummly
-  API key: 0155d8195451ab1bdc4bd84c4082f948
-  Application ID: 0ec6bbad
+Cooking alone can be fun, but cooking with others is on a whole 'nother level! And imagine being able to meet new people while you're at it!
 
-Location Services (Android)
-Azure (for database and cloud sharing)?
-Some api/framework to make it pretty
+Melting Pot allows you to do just that! Just input what ingredients you have, and let our app handle the logistics. It'll find you a new friend to cook with, and a recipe that you two can make with your combined ingredients!
+
+Melting Pot was built for Android using a Parse database and the Yummly Recipe API.
