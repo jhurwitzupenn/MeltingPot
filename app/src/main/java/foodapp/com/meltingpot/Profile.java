@@ -25,6 +25,7 @@ import com.parse.ParseUser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Profile extends ListActivity {
     ImageView profilePic;
@@ -49,7 +50,7 @@ public class Profile extends ListActivity {
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
 
-        new GraphRequest(
+        gnew GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/picture",
                 null,
@@ -64,7 +65,9 @@ public class Profile extends ListActivity {
 
         ParseUser user = ParseUser.getCurrentUser();
 
-        name.setText(user.getString("Name"));
+        if (user != null) {
+            name.setText(user.getString("Name"));
+        }
 
         // Location
         Address address = getLocation(user);
@@ -140,16 +143,18 @@ public class Profile extends ListActivity {
         if (currLocation != null) {
             latitude = currLocation.getLatitude();
             longitude = currLocation.getLongitude();
-        } else {
+        } else if (user != null){
             latitude = user.getDouble("Latitude");
             longitude = user.getDouble("Longitude");
         }
 
-        Geocoder geocoder = new Geocoder(context);
-        try {
-            return geocoder.getFromLocation(latitude, longitude, 1).get(0);
-        } catch (IOException e) {
-            Log.e("Profile", e.getMessage());
+        if (latitude != null && longitude != null) {
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            try {
+                return geocoder.getFromLocation(latitude, longitude, 10).get(0);
+            } catch (IOException e) {
+                Log.e("Profile", e.getMessage());
+            }
         }
 
         return null;

@@ -60,7 +60,11 @@ public class AddIngredients extends ListActivity {
     }
 
     protected void updateStringArray() {
-        ingredientsStrs = (String[]) ingredientsList.toArray();
+        ingredientsStrs = new String[ingredientsList.size()];
+
+        for (int i = 0; i < ingredientsList.size(); i++) {
+            ingredientsStrs[i] = ingredientsList.get(i);
+        }
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientsStrs);
         setListAdapter(adapter);
@@ -72,6 +76,7 @@ public class AddIngredients extends ListActivity {
             ingredientsList.add(ingredient);
             updateStringArray();
         }
+        newIngredient.setText("");
     }
 
     public void onFindMatchButtonClick(View view) {
