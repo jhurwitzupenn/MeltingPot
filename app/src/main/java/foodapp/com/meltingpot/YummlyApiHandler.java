@@ -140,7 +140,7 @@ public class YummlyApiHandler {
         List<String> l = new ArrayList<>();
         for (int i = 0; i < results.length(); i++) {
             try {
-                l.add(results.getJSONObject(i).getString("sourceDisplayName"));
+                l.add(results.getJSONObject(i).getString("sourceRecipeUrl"));
             }
             catch(JSONException e) {
                 Log.d("MELTING", "JSON Parsing Error" + e.getLocalizedMessage());
