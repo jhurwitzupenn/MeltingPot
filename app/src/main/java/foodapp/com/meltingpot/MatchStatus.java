@@ -38,6 +38,8 @@ public class MatchStatus extends Activity {
     String recipeUrl;
     RecipeObject recipeObject;
 
+    ParseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +50,7 @@ public class MatchStatus extends Activity {
         matchStatus = (TextView) findViewById(R.id.matchStatusTextView);
         recipeName = (TextView) findViewById(R.id.recipeNameTextView);
 
-        ParseUser user = ParseUser.getCurrentUser();
+        user = ParseUser.getCurrentUser();
         try {
             user.fetch();
 
@@ -168,5 +170,36 @@ public class MatchStatus extends Activity {
             Log.e("PendingRequestInfo", e.getMessage());
         }
         return new String[0];
+    }
+
+    public void onFinishedMatchButtonClick(View view) {
+        user.remove("Ingredients");
+        user.remove("MatchId");
+        user.remove("RecipeId");
+        user.put("RequestPending", false);
+        user.remove("Time");
+        user.put("HasMatch", false);
+        user.put("AcceptMatch", false);
+        user.saveInBackground();
+        addCollaborator();
+
+        startActivity(new Intent(this, Profile.class));
+    }
+
+    public void addCollaborator() {
+        JSONArray arr = user.getJSONArray("Collaborators");
+        String name = matchName.getText().toString();
+        try {
+            for (int i = 0; i < arr.length(); i++) {
+                if (arr.getString(i).equals(name)) {
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            Log.e("MatchStatus", e.getMessage());
+        }
+        arr.put(matchName.getText().toString());
+        user.put("Collaborators", arr);
+        user.saveInBackground();
     }
 }

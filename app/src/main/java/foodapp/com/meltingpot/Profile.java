@@ -119,6 +119,7 @@ public class Profile extends ListActivity {
         ParseUser user = ParseUser.getCurrentUser();
         // TODO: I don't think I did this right
         user.put("FBUserId", AccessToken.getCurrentAccessToken().getUserId());
+        user.saveInBackground();
 
         if (user != null) {
             name.setText(user.getString("name"));
