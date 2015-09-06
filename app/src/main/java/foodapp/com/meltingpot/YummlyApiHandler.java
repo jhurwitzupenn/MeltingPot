@@ -39,6 +39,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class YummlyApiHandler {
     public static JSONObject json;
+    public static JSONObject recipe_json;
     private final static String URL_BASE = "http://api.yummly.com/v1/api/recipes?";
     private final static String APP_ID = "_app_id=0ec6bbad";
     private final static String APP_KEY = "_app_key=0155d8195451ab1bdc4bd84c4082f948";
@@ -88,6 +89,29 @@ public class YummlyApiHandler {
          */
     }
 
+    public static void makeYummlyRecipeRequest(String id, final Context context, final YummlyCallback y
+    ) {
+        String url = "http://api.yummly.com/v1/api/recipe/" + id + "?" + APP_ID + AMPERSAND + APP_KEY;
+
+        Log.d("MELTING", url);
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, (String)null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        recipe_json = response;
+                        y.result(response);
+                        Log.d("MELTING", recipe_json.toString());
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("MELTING", "Yummly Error response" + error.getLocalizedMessage());
+                    }
+                });
+    }
+
+
     private static String configureUrl(List<String> ingredients) {
         StringBuilder sb = new StringBuilder(URL_BASE + APP_ID + AMPERSAND + APP_KEY + AMPERSAND);
         for (int i = 0; i < ingredients.size(); i ++) {
@@ -136,17 +160,26 @@ public class YummlyApiHandler {
         return l;
     }
 
-    public static List<String> getRecipeUrls(JSONArray results) {
-        List<String> l = new ArrayList<>();
-        for (int i = 0; i < results.length(); i++) {
-            try {
-                l.add(results.getJSONObject(i).getString("sourceRecipeUrl"));
-            }
-            catch(JSONException e) {
-                Log.d("MELTING", "JSON Parsing Error" + e.getLocalizedMessage());
-            }
+    public static String getFirstRecipeId(JSONArray results) {
+        try {
+            return results.getJSONObject(0).getString("id");
         }
-        return l;
+        catch(JSONException e) {
+            Log.d("MELTING", "JSON Parsing Error" + e.getLocalizedMessage());
+            return "";
+        }
+    }
+
+    public static String getRecipeUrls(JSONObject recipe) {
+        try {
+            JSONObject j = recipe.getJSONObject("source");
+            return j.getString("sourceRecipeUrl");
+        }
+        catch(JSONException e) {
+            Log.d("MELTING", "JSON Parsing Error" + e.getLocalizedMessage());
+            return "";
+
+        }
     }
 
     public static List<Integer> getRatings(JSONArray results) {
