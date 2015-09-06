@@ -51,8 +51,11 @@ public class LoginActivity extends Activity {
             @Override
             public void done(ParseUser user, ParseException err) {
                 if (err == null && user != null) {
-                    Intent i = new Intent(getApplicationContext(), Profile.class);
-                    startActivity(i);
+                    if (user.getBoolean("PendingRequest") == false) {
+                        startActivity(new Intent(getApplicationContext(), Profile.class));
+                    } else {
+                        startActivity(new Intent(getApplicationContext(), PendingRequestInfo.class));
+                    }
                 }
             }
         });
