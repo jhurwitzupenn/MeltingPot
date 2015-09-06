@@ -3,6 +3,7 @@ package foodapp.com.meltingpot;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +35,7 @@ public class MatchStatus extends Activity {
 
     String[] matchIngredients;
     String[] missingIngredients;
+    String recipeUrl;
     RecipeObject recipeObject;
 
     @Override
@@ -108,6 +110,7 @@ public class MatchStatus extends Activity {
             if (recipeObject != null) {
                 recipeName.setText(recipeObject.getString("Name"));
                 missingIngredients = fromJSONArray(recipeObject.getJSONArray("MissingIngredients"));
+                recipeUrl = recipeObject.getString("Url");
             }
 
         } catch (Exception e) {
@@ -144,7 +147,8 @@ public class MatchStatus extends Activity {
     }
 
     public void onFullRecipeButtonClick(View view) {
-        // TODO: Start View Recipe intent (url thing)
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(recipeUrl));
+        startActivity(i);
     }
 
     public void onMissingIngredientsButtonClick(View view) {

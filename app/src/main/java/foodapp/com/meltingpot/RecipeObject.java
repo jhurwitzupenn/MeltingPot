@@ -16,12 +16,12 @@ public class RecipeObject extends ParseObject {
     public RecipeObject(){}
 
     public RecipeObject(String name, List<String> ingredients, List<String> missingIngredients,
-                        String instructions) {
+                        String url) {
         super();
         this.put("Name", name);
         this.put("Ingredients", new JSONArray(ingredients));
         this.put("MissingIngredients", new JSONArray(missingIngredients));
-        this.put("Instructions", instructions);
+        this.put("Url", url);
         this.saveInBackground();
     }
 }
