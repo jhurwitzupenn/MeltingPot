@@ -1,14 +1,11 @@
 package foodapp.com.meltingpot;
 
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,7 +18,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.*;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.parse.ParseException;
@@ -34,9 +34,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -66,41 +64,55 @@ public class Profile extends ListActivity {
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
         new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/me/picture",
-                params,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-                        try {
-                            JSONObject j = response.getJSONObject().getJSONObject("data");
-                            final String img_url = j.getString("url");
-                            Log.d("drawing image", img_url);
-                            ImageView prof_view = (ImageView) findViewById(R.id.profileImageView);
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    InputStream is = null;
-                                    try {
-                                        is = (InputStream) new URL(img_url).getContent();
-                                        final Drawable d = Drawable.createFromStream(is, "profile_picture");
-                                        ((ImageView) findViewById(R.id.profileImageView)).post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                ((ImageView) findViewById(R.id.profileImageView)).setImageDrawable(d);
-                                            }
-                                        });
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+            AccessToken.getCurrentAccessToken(),
+            "/me/picture",
+            params,
+            HttpMethod.GET,
+            new GraphRequest.Callback() {
+                public void onCompleted(GraphResponse response) {
+                    try {
+                        JSONObject j = response.getJSONObject().getJSONObject("data");
+                        final String img_url = j.getString("url");
+                        Log.d("drawing image", img_url);
+                        ImageView prof_view = (ImageView) findViewById(R.id.profileImageView);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                InputStream is = null;
+                                try {
+                                    is = (InputStream) new URL(img_url).getContent();
+                                    final Drawable d = Drawable.createFromStream(is, "profile_picture");
+                                    ((ImageView) findViewById(R.id.profileImageView)).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ((ImageView) findViewById(R.id.profileImageView)).setImageDrawable(d);
+                                        }
+                                    });
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                            }).start();
-                        } catch (Exception e) {
-                            Log.d("Getting profile picture", e.toString());
-                            return;
-                        }
+                            }
+                        }).start();
+                    } catch (Exception e) {
+                        Log.d("Getting profile picture", e.toString());
+                        return;
                     }
                 }
+            }
+        ).executeAsync();
+        GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
+            new GraphRequest.GraphJSONObjectCallback() {
+                @Override
+                public void onCompleted(JSONObject j, GraphResponse graphResponse) {
+                    try {
+                        ParseUser currUser = ParseUser.getCurrentUser();
+                        currUser.put("name",j.get("name"));
+                        currUser.saveInBackground();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         ).executeAsync();
 
         ParseUser user = ParseUser.getCurrentUser();
@@ -131,7 +143,7 @@ public class Profile extends ListActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_logout:
                 ParseFacebookUtils.unlinkInBackground(ParseUser.getCurrentUser(), new SaveCallback() {
                     @Override
@@ -156,7 +168,7 @@ public class Profile extends ListActivity {
         startActivity(new Intent(this, AddIngredients.class));
     }
 
-    protected void onListItemClick (ListView l, View v, int position, long id) {
+    protected void onListItemClick(ListView l, View v, int position, long id) {
         collaborator = collaboratorList.get(position);
         selectCollaborator();
     }
@@ -190,7 +202,7 @@ public class Profile extends ListActivity {
         if (currLocation != null) {
             latitude = currLocation.getLatitude();
             longitude = currLocation.getLongitude();
-        } else if (user != null){
+        } else if (user != null) {
             latitude = user.getDouble("Latitude");
             longitude = user.getDouble("Longitude");
         }
