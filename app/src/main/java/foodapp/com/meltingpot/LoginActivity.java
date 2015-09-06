@@ -3,8 +3,6 @@ package foodapp.com.meltingpot;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,6 +11,9 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A login screen that offers login via email/password.
