@@ -46,6 +46,7 @@ public class LoginActivity extends Activity {
         }
     }
 
+
     public void loginBtnClicked(View v) {
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, null, new LogInCallback() {
             @Override
