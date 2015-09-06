@@ -2,6 +2,7 @@ package foodapp.com.meltingpot;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -17,6 +18,12 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.net.URL;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -29,20 +36,8 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         loginBtn = (Button) this.findViewById(R.id.email_sign_in_button);
         if(AccessToken.getCurrentAccessToken() != null) {
-            new GraphRequest(
-                    AccessToken.getCurrentAccessToken(),
-                    "/me/picture",
-                    null,
-                    HttpMethod.GET,
-                    new GraphRequest.Callback() {
-                        public void onCompleted(GraphResponse response) {
-                            Log.d("Photos response", response.getRawResponse());
-                            response.getJSONArray();
-                            Intent i = new Intent(getApplicationContext(), Profile.class);
-                            startActivity(i);
-                        }
-                    }
-            ).executeAsync();
+            Intent i = new Intent(getApplicationContext(), Profile.class);
+            startActivity(i);
         }
     }
 

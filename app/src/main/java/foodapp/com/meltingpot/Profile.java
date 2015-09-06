@@ -3,6 +3,7 @@ package foodapp.com.meltingpot;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -22,7 +23,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.MalformedInputException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -49,16 +56,22 @@ public class Profile extends ListActivity {
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
-
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
-                "/me/picture",
+                "/me/picture&redirect=true",
                 null,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
-                        Log.d("Photos response", response.getRawResponse());
-                        response.getJSONArray();
+                        try {
+                            String img_url = response.getJSONObject().getJSONObject("data").getString("url");
+                            InputStream is = (InputStream) new URL(img_url).getContent();
+                            Drawable d = Drawable.createFromStream(is, "profile_picture");
+                            ((ImageView) findViewById(R.id.profileImageView)).setImageDrawable(d);
+                        } catch (Exception e) {
+                            Log.d("Getting profile picture", e.getMessage());
+                            return;
+                        }
                     }
                 }
         ).executeAsync();
@@ -152,7 +165,7 @@ public class Profile extends ListActivity {
             Geocoder geocoder = new Geocoder(context, Locale.getDefault());
             try {
                 return geocoder.getFromLocation(latitude, longitude, 10).get(0);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 Log.e("Profile", e.getMessage());
             }
         }
