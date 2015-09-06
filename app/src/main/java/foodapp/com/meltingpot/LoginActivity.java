@@ -38,7 +38,11 @@ public class LoginActivity extends Activity {
             }
 
             if (user.getBoolean("HasMatch") == true) {
-                startActivity(new Intent(this, Match.class));
+                if (user.getBoolean("AcceptedMatch") == true) {
+                    startActivity(new Intent(this, MatchStatus.class));
+                } else {
+                    startActivity(new Intent(this, Match.class));
+                }
             } else if (user.getBoolean("RequestPending") == true) {
                 startActivity(new Intent(this, PendingRequestInfo.class));
             } else {
@@ -54,7 +58,11 @@ public class LoginActivity extends Activity {
             public void done(ParseUser user, ParseException err) {
                 if (err == null && user != null) {
                     if (user.getBoolean("HasMatch") == true) {
-                        startActivity(new Intent(getApplicationContext(), Match.class));
+                        if (user.getBoolean("AcceptedMatch") == true) {
+                            startActivity(new Intent(getApplicationContext(), MatchStatus.class));
+                        } else {
+                            startActivity(new Intent(getApplicationContext(), Match.class));
+                        }
                     } else if (user.getBoolean("RequestPending") == true) {
                         startActivity(new Intent(getApplicationContext(), PendingRequestInfo.class));
                     } else {

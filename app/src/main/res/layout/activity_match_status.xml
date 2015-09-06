@@ -74,6 +74,23 @@
                     android:id="@+id/matchTimeTextView"
                     android:layout_gravity="center_horizontal" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Phone Number:"
+                    android:id="@+id/textView12"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="(408) 966-2463"
+                    android:id="@+id/matchPhoneNumberTextView"
+                    android:layout_gravity="center_horizontal" />
+
                 <Button
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"

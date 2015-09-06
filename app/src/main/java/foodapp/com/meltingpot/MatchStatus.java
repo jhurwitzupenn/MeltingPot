@@ -30,6 +30,7 @@ public class MatchStatus extends Activity {
     ImageView matchProfilePic;
     TextView matchName;
     TextView matchTime;
+    TextView matchPhoneNumber;
     TextView recipeName;
     TextView matchStatus;
 
@@ -48,6 +49,7 @@ public class MatchStatus extends Activity {
         matchName = (TextView) findViewById(R.id.matchNameTextView);
         matchTime = (TextView) findViewById(R.id.matchTimeTextView);
         matchStatus = (TextView) findViewById(R.id.matchStatusTextView);
+        matchPhoneNumber = (TextView) findViewById(R.id.matchPhoneNumberTextView);
         recipeName = (TextView) findViewById(R.id.recipeNameTextView);
 
         user = ParseUser.getCurrentUser();
@@ -59,6 +61,7 @@ public class MatchStatus extends Activity {
             if (matchUser != null) {
                 matchName.setText(matchUser.getString("name"));
                 matchTime.setText(matchUser.getString("Time"));
+                matchPhoneNumber.setText(matchUser.getString("PhoneNumber"));
                 matchIngredients = fromJSONArray(matchUser.getJSONArray("Ingredients"));
 
                 matchStatus.setText(matchUser.getBoolean("AcceptMatch")

@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -45,9 +46,10 @@ public class Profile extends ListActivity {
     ImageView profilePic;
     TextView name;
     TextView location;
+    EditText phoneNumber;
 
     // Collaborator that the user selects
-    ParseUser collaborator;
+    ParseUser user;
 
     //List of Collaborators
     String[] collaboratorStrs = new String[0];
@@ -64,6 +66,7 @@ public class Profile extends ListActivity {
         profilePic = (ImageView) findViewById(R.id.profileImageView);
         name = (TextView) findViewById(R.id.nameTextView);
         location = (TextView) findViewById(R.id.locationTextView);
+        phoneNumber = (EditText) findViewById(R.id.phoneNumberEditText);
         new GraphRequest(
             AccessToken.getCurrentAccessToken(),
             "/me/picture",
@@ -116,13 +119,16 @@ public class Profile extends ListActivity {
             }
         ).executeAsync();
 
-        ParseUser user = ParseUser.getCurrentUser();
+        user = ParseUser.getCurrentUser();
         // TODO: I don't think I did this right
         user.put("FBUserId", AccessToken.getCurrentAccessToken().getUserId());
         user.saveInBackground();
 
         if (user != null) {
             name.setText(user.getString("name"));
+            if (user.getString("PhoneNumber") != null) {
+                phoneNumber.setText(user.getString("PhoneNumber"));
+            }
         }
 
         // Location
@@ -160,6 +166,10 @@ public class Profile extends ListActivity {
     }
 
     public void onStartCookingButtonClick(View view) {
+        if (!phoneNumber.getText().toString().equals("Enter Number")) {
+            user.put("PhoneNumber", phoneNumber.getText().toString());
+            user.saveInBackground();
+        }
         startActivity(new Intent(this, AddIngredients.class));
     }
 
@@ -214,9 +224,5 @@ public class Profile extends ListActivity {
         }
 
         return null;
-    }
-
-    public void onEditLocationButtonClick(View view) {
-
     }
 }
