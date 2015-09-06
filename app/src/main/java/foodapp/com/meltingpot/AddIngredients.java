@@ -1,7 +1,9 @@
 package foodapp.com.meltingpot;
 
+import android.annotation.TargetApi;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -99,6 +101,7 @@ public class AddIngredients extends ListActivity {
         startActivity(myIntent);
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     public JSONArray toJSONArray(String[] arr) {
         try {
             return new JSONArray(ingredientsStrs);

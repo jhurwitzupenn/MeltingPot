@@ -94,7 +94,7 @@ public class YummlyApiHandler {
             sb.append(ALLOWED_INGREDIENT_PARAMETER);
             sb.append(ingredients.get(i));
             if(i < ingredients.size() - 1) {
-                sb.append("AMPERSAND");
+                sb.append(AMPERSAND);
             }
         }
         return sb.toString();
@@ -163,7 +163,7 @@ public class YummlyApiHandler {
     }
 
     //http://stackoverflow.com/questions/3395729/convert-json-array-to-normal-java-array
-    private static List<String> convertJSONArrayToList(JSONArray a) {
+    public static List<String> convertJSONArrayToList(JSONArray a) {
         ArrayList<String> list = new ArrayList<>();
         if (a != null) {
             int len = a.length();

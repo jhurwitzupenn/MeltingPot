@@ -11,11 +11,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class PendingRequestInfo extends ListActivity {
@@ -43,6 +50,33 @@ public class PendingRequestInfo extends ListActivity {
         if (ingredientsStrs == null) {
             ingredientsStrs = fromJSONArray(user.getJSONArray("Ingredients"));
         }
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        query.whereEqualTo("RequestPending", true);
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                if (e == null) {
+                    List<String> myIngreds =
+                            YummlyApiHandler.convertJSONArrayToList(ParseUser.getCurrentUser().getJSONArray("Ingredients"));
+                    HashSet<String> myIngredsSet = new HashSet<String>(myIngreds);
+                    for (ParseUser p : objects) {
+                        List<String> theirIngreds =
+                                YummlyApiHandler.convertJSONArrayToList(p.getJSONArray("Ingredients"));
+                        HashSet<String> ourIngreds = new HashSet<String>(theirIngreds);
+                        ourIngreds.addAll(myIngredsSet);
+                        YummlyApiHandler.makeYummlyRequest(new ArrayList<String>(ourIngreds),
+                                getApplicationContext(), new YummlyCallback() {
+                                    @Override
+                                    public void result(JSONObject j) {
+                                        JSONArray results = YummlyApiHandler.results(j);
+                                        Log.d("results from thing", YummlyApiHandler.getRecipeNames(results).toString());
+                                    }
+                                }
+                        );
+                    }
+                }
+            }
+        });
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientsStrs);
         setListAdapter(adapter);
     }

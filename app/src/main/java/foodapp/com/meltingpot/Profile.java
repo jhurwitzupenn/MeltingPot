@@ -66,14 +66,15 @@ public class Profile extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        String[] ingreds = {"banana","carrot"};
+        String[] ingreds = {"bananas","carrots"};
         YummlyApiHandler.makeYummlyRequest(Arrays.asList(ingreds),
-                this.getApplicationContext(), new YummlyCallback() {
-                    @Override
-                    public void result(JSONObject j) {
-                        Log.d("result from call", j.toString());
-                    }
+            this.getApplicationContext(), new YummlyCallback() {
+                @Override
+                public void result(JSONObject j) {
+                    JSONArray results = YummlyApiHandler.results(j);
+                    Log.d("results from thing", YummlyApiHandler.getRecipeNames(results).toString());
                 }
+            }
         );
         getActionBar().show();
         Bundle params = new Bundle();
@@ -135,7 +136,6 @@ public class Profile extends ListActivity {
         ).executeAsync();
 
         user = ParseUser.getCurrentUser();
-        // TODO: I don't think I did this right
         user.put("FBUserId", AccessToken.getCurrentAccessToken().getUserId());
         user.saveInBackground();
 
@@ -157,7 +157,7 @@ public class Profile extends ListActivity {
         }
         location.setText(cityName);
 
-//        updateStringArray(user.getJSONArray("Collaborators"));
+        updateStringArray(user.getJSONArray("Collaborators"));
     }
 
     @Override
