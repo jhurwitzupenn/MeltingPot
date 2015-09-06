@@ -42,7 +42,6 @@ public class YummlyApiHandler {
     private final static String APP_ID = "_app_id=0ec6bbad";
     private final static String APP_KEY = "_app_key=0155d8195451ab1bdc4bd84c4082f948";
     private final static String ALLOWED_INGREDIENT_PARAMETER = "allowedIngredient[]=";
-    private final static String REQUIRE_PICS = "requirePictures=true";
     private final static String AMPERSAND = "&";
     private static boolean has_requested;
 
@@ -90,8 +89,7 @@ public class YummlyApiHandler {
     }
 
     private static String configureUrl(List<String> ingredients) {
-        StringBuilder sb = new StringBuilder(URL_BASE + APP_ID + AMPERSAND + APP_KEY + AMPERSAND +
-        REQUIRE_PICS + AMPERSAND);
+        StringBuilder sb = new StringBuilder(URL_BASE + APP_ID + AMPERSAND + APP_KEY + AMPERSAND);
         for (int i = 0; i < ingredients.size(); i ++) {
             sb.append(ALLOWED_INGREDIENT_PARAMETER);
             sb.append(ingredients.get(i));
