@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -59,10 +60,12 @@ public class PendingRequestInfo extends ListActivity {
                     List<String> myIngreds =
                             YummlyApiHandler.convertJSONArrayToList(ParseUser.getCurrentUser().getJSONArray("Ingredients"));
                     HashSet<String> myIngredsSet = new HashSet<String>(myIngreds);
-                    for (ParseUser p : objects) {
+                    final HashMap<RecipeObject, Integer> recipeCount = new HashMap<>();
+                    final HashMap<RecipeObject, ParseUser> userIds = new HashMap<>();
+                    for (final ParseUser p : objects) {
                         List<String> theirIngreds =
                                 YummlyApiHandler.convertJSONArrayToList(p.getJSONArray("Ingredients"));
-                        HashSet<String> ourIngreds = new HashSet<String>(theirIngreds);
+                        final HashSet<String> ourIngreds = new HashSet<String>(theirIngreds);
                         ourIngreds.addAll(myIngredsSet);
                         YummlyApiHandler.makeYummlyRequest(new ArrayList<String>(ourIngreds),
                                 getApplicationContext(), new YummlyCallback() {
@@ -70,9 +73,50 @@ public class PendingRequestInfo extends ListActivity {
                                     public void result(JSONObject j) {
                                         JSONArray results = YummlyApiHandler.results(j);
                                         Log.d("results from thing", YummlyApiHandler.getRecipeNames(results).toString());
+                                        String name = YummlyApiHandler.getRecipeNames(results).get(0);
+                                        List<String> ingredients = YummlyApiHandler.getIngredients(results).get(0);
+                                        List<String> missingIngredients = new ArrayList<String>(ingredients);
+                                        missingIngredients.removeAll(ourIngreds);
+                                        String url = YummlyApiHandler.getRecipeUrls(results).get(0);
+                                        RecipeObject recipe = new RecipeObject(name, ingredients, missingIngredients, url);
+                                        recipeCount.put(recipe, missingIngredients.size());
+                                        userIds.put(recipe, p);
                                     }
                                 }
                         );
+                    }
+
+                    // find best
+                    RecipeObject best = null;
+                    int count = -1;
+                    for (RecipeObject recipe : recipeCount.keySet()) {
+                        int missing = recipeCount.get(recipe);
+                        if (missing < count) {
+                            count = missing;
+                            best = recipe;
+                        }
+                    }
+
+                    if (best != null) {
+                        // yay match
+                        user.put("RequestPending", false);
+                        user.put("HasMatch", true);
+                        user.put("AcceptMatch", false);
+                        user.put("RecipeId", best.getObjectId());
+
+                        ParseUser match = userIds.get(best);
+
+                        user.put("MatchId", match.getObjectId());
+
+                        match.put("RequestPending", false);
+                        match.put("HasMatch", true);
+                        match.put("AcceptMatch", false);
+                        match.put("MatchId", user.getObjectId());
+                        match.put("RecipeId", best.getObjectId());
+
+                        best.saveInBackground();
+                        user.saveInBackground();
+                        match.saveInBackground();
                     }
                 }
             }
