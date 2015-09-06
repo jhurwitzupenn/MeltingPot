@@ -57,6 +57,18 @@ public class PendingRequestInfo extends ListActivity {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 if (e == null) {
+                    for (ParseUser p : objects) {
+                        if (p.getString("MatchId").equals(user.getObjectId())) {
+                            user.put("RequestPending", false);
+                            user.put("HasMatch", true);
+                            user.put("AcceptMatch", false);
+                            user.put("MatchId", p.getObjectId());
+                            user.put("RecipeId", p.getString("RecipeId"));
+                            user.saveInBackground();
+
+                            startActivity(new Intent(getApplicationContext(), Match.class));
+                        }
+                    }
                     List<String> myIngreds =
                             YummlyApiHandler.convertJSONArrayToList(ParseUser.getCurrentUser().getJSONArray("Ingredients"));
                     HashSet<String> myIngredsSet = new HashSet<String>(myIngreds);
@@ -79,44 +91,26 @@ public class PendingRequestInfo extends ListActivity {
                                         missingIngredients.removeAll(ourIngreds);
                                         String url = YummlyApiHandler.getRecipeUrls(results).get(0);
                                         RecipeObject recipe = new RecipeObject(name, ingredients, missingIngredients, url);
-                                        recipeCount.put(recipe, missingIngredients.size());
-                                        userIds.put(recipe, p);
+                                        try {
+                                            recipe.save();
+                                        } catch (Exception e) {
+                                            Log.e("PendingRequestInfo", e.getMessage());
+                                        }
+
+                                        // yay match
+                                        user.put("RequestPending", false);
+                                        user.put("HasMatch", true);
+                                        user.put("AcceptMatch", false);
+                                        user.put("RecipeId", recipe.getObjectId());
+                                        user.put("MatchId", p.getObjectId());
+
+                                        user.saveInBackground();
+
+                                        startActivity(new Intent(getApplicationContext(), Match.class));
                                     }
                                 }
                         );
-                    }
-
-                    // find best
-                    RecipeObject best = null;
-                    int count = -1;
-                    for (RecipeObject recipe : recipeCount.keySet()) {
-                        int missing = recipeCount.get(recipe);
-                        if (missing < count) {
-                            count = missing;
-                            best = recipe;
-                        }
-                    }
-
-                    if (best != null) {
-                        // yay match
-                        user.put("RequestPending", false);
-                        user.put("HasMatch", true);
-                        user.put("AcceptMatch", false);
-                        user.put("RecipeId", best.getObjectId());
-
-                        ParseUser match = userIds.get(best);
-
-                        user.put("MatchId", match.getObjectId());
-
-                        match.put("RequestPending", false);
-                        match.put("HasMatch", true);
-                        match.put("AcceptMatch", false);
-                        match.put("MatchId", user.getObjectId());
-                        match.put("RecipeId", best.getObjectId());
-
-                        best.saveInBackground();
-                        user.saveInBackground();
-                        match.saveInBackground();
+                        break;
                     }
                 }
             }

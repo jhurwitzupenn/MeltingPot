@@ -37,6 +37,8 @@ public class Match extends Activity {
     String recipeUrl;
     RecipeObject recipeObject;
 
+    ParseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,11 +48,12 @@ public class Match extends Activity {
         matchTime = (TextView) findViewById(R.id.matchTimeTextView);
         recipeName = (TextView) findViewById(R.id.recipeNameTextView);
 
-        ParseUser user = ParseUser.getCurrentUser();
+        user = ParseUser.getCurrentUser();
         try {
             user.fetch();
             ParseUser matchUser = ParseUser.getQuery().get(user.getString("MatchId"));
             if (matchUser != null) {
+
                 matchName.setText(matchUser.getString("name"));
                 matchTime.setText(matchUser.getString("Time"));
                 matchIngredients = fromJSONArray(matchUser.getJSONArray("Ingredients"));
@@ -147,10 +150,19 @@ public class Match extends Activity {
     }
 
     public void onDeclineMatchButtonClick(View view) {
+        user.remove("MatchId");
+        user.remove("RecipeId");
+        user.put("RequestPending", true);
+        user.put("HasMatch", false);
+        user.saveInBackground();
+
         startActivity(new Intent(this, PendingRequestInfo.class));
     }
 
     public void onAcceptMatchButtonClick(View view) {
+        user.put("AcceptMatch", true);
+        user.saveInBackground();
+
         startActivity(new Intent(this, MatchStatus.class));
     }
 
