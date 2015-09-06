@@ -1,6 +1,8 @@
 package foodapp.com.meltingpot;
 
 import android.app.Application;
+import android.content.Context;
+
 import com.parse.Parse;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;

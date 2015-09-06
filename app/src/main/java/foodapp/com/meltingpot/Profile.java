@@ -1,12 +1,15 @@
 package foodapp.com.meltingpot;
 
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,8 +42,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import rx.schedulers.Schedulers;
 
 public class Profile extends ListActivity {
     ImageView profilePic;
@@ -60,6 +66,15 @@ public class Profile extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        String[] ingreds = {"banana","carrot"};
+        YummlyApiHandler.makeYummlyRequest(Arrays.asList(ingreds),
+                this.getApplicationContext(), new YummlyCallback() {
+                    @Override
+                    public void result(JSONObject j) {
+                        Log.d("result from call", j.toString());
+                    }
+                }
+        );
         getActionBar().show();
         Bundle params = new Bundle();
         params.putString("redirect", "false");
@@ -81,19 +96,19 @@ public class Profile extends ListActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                InputStream is = null;
-                                try {
-                                    is = (InputStream) new URL(img_url).getContent();
-                                    final Drawable d = Drawable.createFromStream(is, "profile_picture");
-                                    ((ImageView) findViewById(R.id.profileImageView)).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ((ImageView) findViewById(R.id.profileImageView)).setImageDrawable(d);
-                                        }
-                                    });
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                            InputStream is = null;
+                            try {
+                                is = (InputStream) new URL(img_url).getContent();
+                                final Drawable d = Drawable.createFromStream(is, "profile_picture");
+                                ((ImageView) findViewById(R.id.profileImageView)).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((ImageView) findViewById(R.id.profileImageView)).setImageDrawable(d);
+                                    }
+                                });
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             }
                         }).start();
                     } catch (Exception e) {
@@ -142,7 +157,7 @@ public class Profile extends ListActivity {
         }
         location.setText(cityName);
 
-        updateStringArray(user.getJSONArray("Collaborators"));
+//        updateStringArray(user.getJSONArray("Collaborators"));
     }
 
     @Override
