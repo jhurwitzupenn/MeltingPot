@@ -109,6 +109,8 @@ public class YummlyApiHandler {
                         Log.d("MELTING", "Yummly Error response" + error.getLocalizedMessage());
                     }
                 });
+        Volley.newRequestQueue(context).add(jsObjRequest);
+
     }
 
 
