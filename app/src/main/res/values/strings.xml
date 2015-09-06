@@ -6,8 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_add_ingredients">Add Ingredients!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_pending_request_info">PendingRequestInfo</string>
     <string name="logout">Log Out</string>
-    >>>>>>> Stashed changes
     <string name="title_activity_pending_request_info">Pending Request Info</string>
 </resources>
