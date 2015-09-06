@@ -75,7 +75,7 @@ public class AddIngredients extends ListActivity {
     public void onAddIngredientButtonClick(View view) {
         String ingredient = newIngredient.getText().toString();
         if (ingredient != null && !ingredientsList.contains(ingredient)) {
-            ingredientsList.add(ingredient);
+            ingredientsList.add(0, ingredient);
             updateStringArray();
         }
         newIngredient.setText("");

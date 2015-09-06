@@ -45,7 +45,7 @@ public class LoginActivity extends Activity {
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, null, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
-                if (user != null) {
+                if (err == null && user != null) {
                     Intent i = new Intent(getApplicationContext(), Profile.class);
                     startActivity(i);
                 }
